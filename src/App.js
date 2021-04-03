@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, Container, Grid } from "semantic-ui-react";
 import React from "react";
+import ReactGa from "react-ga";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
@@ -31,6 +32,9 @@ function App() {
     if (storedQueue?.length) {
       setHasStoredQueue(true);
     }
+
+    ReactGa.initialize("UA-193720727-1");
+    ReactGa.pageview("/");
   }, []);
 
   const loadStoredQueue = () => {
