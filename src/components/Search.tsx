@@ -1,13 +1,18 @@
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import { Button, Input, Icon, Grid } from "semantic-ui-react";
 import "../App.css";
 import AboutModal from "./AboutModal";
 
-function Search({ searchVideo, loading }) {
+interface Props {
+  searchVideo: any;
+  loading: boolean;
+}
+
+const Search: FC<Props> = ({ searchVideo, loading }) => {
   const [searchInput, setSearchInput] = useState("");
   const [isKaraoke, setIsKaraoke] = useState(true);
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = (event: any) => {
     if (event.key === "Enter") {
       submit();
     }
@@ -52,6 +57,6 @@ function Search({ searchVideo, loading }) {
       </Grid.Column>
     </Grid>
   );
-}
+};
 
 export default Search;

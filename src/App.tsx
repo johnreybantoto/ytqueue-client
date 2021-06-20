@@ -2,20 +2,20 @@ import Search from "./components/Search";
 import SearchResult from "./components/SearchResult";
 import VideoPlayer from "./components/VideoPlayer";
 import VideoQueue from "./components/VideoQueue";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import axios from "axios";
 import { Button, Container, Grid } from "semantic-ui-react";
-import React from "react";
 import ReactGa from "react-ga";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { IVideoItem } from "./core/interfaces";
 dayjs.extend(relativeTime);
 
-function App() {
-  const [searchResults, setSearchResults] = useState([]);
+const App: FC = () => {
+  const [searchResults, setSearchResults] = useState<IVideoItem[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [videoToPlay, setVideoToPlay] = useState({});
-  const [queue, setQueue] = useState([]);
+  const [videoToPlay, setVideoToPlay] = useState<IVideoItem | null>(null);
+  const [queue, setQueue] = useState<IVideoItem[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasStoredQueue, setHasStoredQueue] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -28,9 +28,12 @@ function App() {
   }, [queue]);
 
   useEffect(() => {
-    const storedQueue = JSON.parse(localStorage.getItem("storedQueue"));
-    if (storedQueue?.length) {
-      setHasStoredQueue(true);
+    const localQueue = localStorage.getItem("storedQueue");
+    if (localQueue) {
+      const storedQueue = JSON.parse(localQueue);
+      if (storedQueue?.length) {
+        setHasStoredQueue(true);
+      }
     }
 
     ReactGa.initialize("UA-193720727-1");
@@ -39,13 +42,18 @@ function App() {
 
   const loadStoredQueue = () => {
     setIsLoaded(true);
-    const storedQueue = JSON.parse(localStorage.getItem("storedQueue"));
-    setQueue(storedQueue);
+    const localQueue = localStorage.getItem("storedQueue");
+    if (localQueue) {
+      const storedQueue = JSON.parse(localQueue);
+      setQueue(storedQueue);
+    }
   };
 
-  const searchVideo = async (searchQuery) => {
+  const searchVideo = async (searchQuery: string) => {
     setLoading(true);
-    let { data } = await axios.get(`${ytqueueServer}api/search/${searchQuery}`);
+    let { data } = await axios.get<IVideoItem[]>(
+      `${ytqueueServer}api/search/${searchQuery}`
+    );
     data = data?.map((x) => {
       const publishedAt = dayjs(x.snippet.publishedAt).fromNow();
       return { ...x, publishedAt };
@@ -56,7 +64,7 @@ function App() {
     setLoading(false);
   };
 
-  const addToQueue = (item) => {
+  const addToQueue = (item: IVideoItem) => {
     if (queue.length < 1) {
       setVideoToPlay(item);
       item.played = true;
@@ -65,7 +73,7 @@ function App() {
     setQueue([...queue, item]);
   };
 
-  const playNextInQueue = (key) => {
+  const playNextInQueue = (key: string) => {
     const playedItemIndex = queue.findIndex((x) => x.key === key);
 
     if (playedItemIndex >= 0 && playedItemIndex !== queue.length) {
@@ -79,18 +87,19 @@ function App() {
     }
   };
 
-  const removeItem = (item) => {
+  const removeItem = (item: IVideoItem) => {
     const itemToRemove = queue.findIndex((x) => x.key === item.key);
     queue.splice(itemToRemove, 1);
 
     setQueue([...queue]);
   };
 
-  const playItem = (item) => {
+  const playItem = (item: IVideoItem) => {
     const itemToPlay = queue.find((x) => x.key === item.key);
-    itemToPlay.isPlayed = true;
     setQueue([...queue]);
-    setVideoToPlay(itemToPlay);
+    if (itemToPlay) {
+      setVideoToPlay(itemToPlay);
+    }
   };
 
   return (
@@ -101,9 +110,9 @@ function App() {
         <Grid.Column>
           {searchResults?.length > 0 && (
             <SearchResult
-              searchQuery={searchQuery}
               searchResults={searchResults}
               addToQueue={addToQueue}
+              searchQuery={searchQuery}
             />
           )}
           <VideoPlayer videoToPlay={videoToPlay} onEnded={playNextInQueue} />
@@ -125,6 +134,6 @@ function App() {
       </Grid>
     </Container>
   );
-}
+};
 
 export default App;

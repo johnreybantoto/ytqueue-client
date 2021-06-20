@@ -1,19 +1,30 @@
-import React from "react";
+import React, { FC } from "react";
 import { Grid, Icon, Image, Reveal } from "semantic-ui-react";
+import { IVideoItem } from "../core/interfaces";
 
-function VideoItem({
+interface Props {
+  item: IVideoItem;
+  onThumbnailClick: (item: IVideoItem) => IVideoItem;
+  onRemoveClick?: (item: IVideoItem) => IVideoItem;
+  thumbnailText: string;
+  showDelete?: boolean;
+}
+
+const VideoItem: FC<Props> = ({
   item,
   onThumbnailClick,
   onRemoveClick,
   thumbnailText,
   showDelete,
-}) {
+}) => {
   const handleThumbnailClick = () => {
     onThumbnailClick(item);
   };
 
   const handleRemove = () => {
-    onRemoveClick(item);
+    if (onRemoveClick) {
+      onRemoveClick(item);
+    }
   };
 
   return (

@@ -1,10 +1,18 @@
-import React from "react";
+import React, { FC } from "react";
 import { Card } from "semantic-ui-react";
 import VideoItem from "./VideoItem";
 import { ReactSortable } from "react-sortablejs";
 import "../App.css";
+import { IVideoItem } from "../core/interfaces";
 
-function VideoQueue({ queue, setQueue, removeItem, playItem }) {
+interface Props {
+  queue: any[];
+  setQueue: any;
+  removeItem: (item: IVideoItem) => any;
+  playItem: (item: IVideoItem) => any;
+}
+
+const VideoQueue: FC<Props> = ({ queue, setQueue, removeItem, playItem }) => {
   return (
     <Card fluid>
       <Card.Content>
@@ -28,6 +36,6 @@ function VideoQueue({ queue, setQueue, removeItem, playItem }) {
       </Card.Content>
     </Card>
   );
-}
+};
 
 export default VideoQueue;

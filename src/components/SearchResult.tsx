@@ -1,8 +1,19 @@
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import { Accordion, Card, Icon } from "semantic-ui-react";
+import { IVideoItem } from "../core/interfaces";
 import VideoItem from "./VideoItem";
 
-function SearchResult({ searchResults, addToQueue, searchQuery }) {
+interface Props {
+  searchResults: any[];
+  addToQueue: (item: IVideoItem) => any;
+  searchQuery: string;
+}
+
+const SearchResult: FC<Props> = ({
+  searchResults,
+  addToQueue,
+  searchQuery,
+}) => {
   const [accordionOpen, setAccordionOpen] = useState(true);
 
   return (
@@ -31,6 +42,6 @@ function SearchResult({ searchResults, addToQueue, searchQuery }) {
       </Accordion.Content>
     </Accordion>
   );
-}
+};
 
 export default SearchResult;

@@ -1,9 +1,15 @@
-import React from "react";
+import React, { FC } from "react";
 import ReactPlayer from "react-player/youtube";
 import { Container } from "semantic-ui-react";
 import "../App.css";
+import { IVideoItem } from "../core/interfaces";
 
-function VideoPlayer({ videoToPlay, onEnded }) {
+interface Props {
+  videoToPlay: IVideoItem | null;
+  onEnded: any;
+}
+
+const VideoPlayer: FC<Props> = ({ videoToPlay, onEnded }) => {
   const youtubeUrl = "https://www.youtube.com/watch?v=";
   let isPip = false;
 
@@ -52,6 +58,6 @@ function VideoPlayer({ videoToPlay, onEnded }) {
       </Button> */}
     </Container>
   );
-}
+};
 
 export default VideoPlayer;
