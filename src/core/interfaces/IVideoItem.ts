@@ -11,7 +11,7 @@ export interface IVideoItem {
     title: string;
     publishedAt: string;
   };
-  publishedAt: string;
-  played: boolean;
+  humanizedTime: string;
+  isPlayed: boolean;
   key: string;
 }

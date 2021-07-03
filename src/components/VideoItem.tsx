@@ -7,7 +7,7 @@ interface Props {
   onThumbnailClick: (item: IVideoItem) => IVideoItem;
   onRemoveClick?: (item: IVideoItem) => IVideoItem;
   thumbnailText: string;
-  showDelete?: boolean;
+  isInsideQueue?: boolean;
 }
 
 const VideoItem: FC<Props> = ({
@@ -15,10 +15,11 @@ const VideoItem: FC<Props> = ({
   onThumbnailClick,
   onRemoveClick,
   thumbnailText,
-  showDelete,
+  isInsideQueue,
 }) => {
   const handleThumbnailClick = () => {
     onThumbnailClick(item);
+    item.isPlayed = !!isInsideQueue;
   };
 
   const handleRemove = () => {
@@ -28,7 +29,10 @@ const VideoItem: FC<Props> = ({
   };
 
   return (
-    <Grid columns={2}>
+    <Grid
+      columns={2}
+      style={item.isPlayed ? { backgroundColor: "#dbdce6" } : {}}
+    >
       <Grid.Row style={{ margin: "1rem" }}>
         <Grid.Column
           width={6}
@@ -47,8 +51,8 @@ const VideoItem: FC<Props> = ({
         </Grid.Column>
         <Grid.Column>
           <div>{item.snippet.title}</div>
-          <div>{item.publishedAt}</div>
-          {showDelete && (
+          <p>{item.humanizedTime}</p>
+          {isInsideQueue && (
             <Icon
               color="red"
               style={{ cursor: "pointer" }}
@@ -60,6 +64,6 @@ const VideoItem: FC<Props> = ({
       </Grid.Row>
     </Grid>
   );
-}
+};
 
 export default VideoItem;

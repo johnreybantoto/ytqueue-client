@@ -27,7 +27,7 @@ const VideoQueue: FC<Props> = ({ queue, setQueue, removeItem, playItem }) => {
                 thumbnailText="Play"
                 onRemoveClick={removeItem}
                 onThumbnailClick={playItem}
-                showDelete
+                isInsideQueue
                 item={x}
               />
             ))}

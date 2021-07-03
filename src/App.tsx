@@ -67,7 +67,7 @@ const App: FC = () => {
   const addToQueue = (item: IVideoItem) => {
     if (queue.length < 1) {
       setVideoToPlay(item);
-      item.played = true;
+      item.isPlayed = true;
     }
     item.key = Math.random().toString(36).substr(2, 5);
     setQueue([...queue, item]);
@@ -80,7 +80,7 @@ const App: FC = () => {
       const nextItemIndex = playedItemIndex + 1;
       const nextItemToPlay = queue[nextItemIndex];
       if (nextItemToPlay) {
-        nextItemToPlay.played = true;
+        nextItemToPlay.isPlayed = true;
         setQueue([...queue]);
         setVideoToPlay(nextItemToPlay);
       }
